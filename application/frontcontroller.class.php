@@ -2,7 +2,11 @@
 class FrontController 
 { 
 	
-    public function __construct (){ 
+	var $routes = array();
+    
+    public function __construct ($routes)
+    {
+    	$this->routes = $routes; 
     
         if (isset($_SERVER['PATH_INFO'])){ 
             $parts = explode ('/',strtolower(trim($_SERVER['PATH_INFO'], '/' ))); 
@@ -18,11 +22,7 @@ class FrontController
             $action = 'index'; 
         }
          
-         
-        /*
-        	If router returns false dispatch controller/action
-        		else,see router
-        */
+        //	If router returns false dispatch controller/action else,see router
         if(!$this->router($_SERVER['PATH_INFO'])){
         	$this->dispatch($controller, $action);    
         }  	
@@ -30,30 +30,35 @@ class FrontController
     }
     
     /*
-    	Router
-    		Check if current url call refers to a different controller class and method.
+    *	Router
+    *	Check if current url call refers to a different controller class and method.
     */
-    public function router($path){
-    	
-    	//allowed routes
-    	$routes = array ( 
-    		/*'/news/items/(id)' => array ( 'controller' => 'news', 'action' => 'items' ), 
-    		'/products/item/(id)' => array ( 'controller' => 'news', 'action' => 'items' ),    */	
-    		'/news/<action>/<id>' => array ( 'controller' => 'news', 'action' => 'items' ),
-    		'a' => array ( 'controller' => 'news', 'action' => 'items' )
-    	);
-    	
-   		$array = preg_match('^\/.*^', '/news/items',$matches);
-		var_dump($matches);
-    	
-    	return false;
+    public function router($currentUrl)
+    {
+    	$routeMap 	  = $this->routes;
+    	$currentRoute = '';
+    	$parts = explode ('/',strtolower(trim($currentUrl, '/' ))); 
+		
+		//check if current request ahs a different route
+		if(array_key_exists($currentUrl,$routeMap)){
+			$currentRoute = $routeMap[$currentUrl];
+		}else{
+			//loop trough routes map
+				//include current controller and call current action
+			
+			//else execute dispatch using controller/action see LINE:#27
+		}
+		
+		var_dump($currentRoute);
+       	return false;
     }    
     
-    /**
+    /*
     *	Dispatch
-    		does things.. include controller class & execute requested action
-    **/
-    public function dispatch ($controller, $action){
+    *		does things.. include controller class & execute requested action
+    */
+    public function dispatch ($controller, $action)
+    {
 		
         if (file_exists('./application/controllers/' . $controller . '.controller.php')){ 
             require_once('./application/controllers/'.$controller . '.controller.php'); 
@@ -78,8 +83,8 @@ class FrontController
         $this->throw404($controller,$action); 
     }
     
-    public function throw404($controller,$action){
+    public function throw404($controller,$action)
+    {
     	die('<pre>Le 404! - controller:' . $controller . ' action: ' . $action . '  </pre>');
     } 
-    
 }

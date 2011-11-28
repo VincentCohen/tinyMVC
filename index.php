@@ -30,5 +30,19 @@ READ
 :https://github.com/robap/php-router/blob/master/lib/Router.php
 **/
 
+/*
+* Set Routes
+* Example: $routes['news'], $routes['news']['view'], $routes['news']['archive']
+*			
+*/
+
+$routes = array ( 	
+	'/news/<action>/<id>' => array ( 'controller' => 'news', 'action' => 'archive' ),
+	'/news/different/5' => array ( 'controller' => 'different', 'action' => 'special' ),
+	'/blog/<action>/<id>' => array ( 'controller' => 'blog', 'action' => 'index' ),
+	'/forum/<action>/<id>' => array ( 'controller' => 'forum', 'action' => 'index' ),
+	'/register/<action>/<id>' => array ( 'controller' => 'register', 'action' => 'account' ),
+);
+
 echo '<pre>';
-new FrontController();
+new FrontController($routes);
