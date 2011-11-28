@@ -2,7 +2,7 @@
 
 class Models_Default extends Models_Database{
 
-   public function indexTest()
+   public function getIndexTitle()
    {
 		return 'IndexModelleTje';
    }

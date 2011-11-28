@@ -1,6 +1,6 @@
-ndex vie wphp
+<pre> index
 <?
 var_dump($data);
-var_dump($title);
+?>
 
-var_dump($this);
+</pre>

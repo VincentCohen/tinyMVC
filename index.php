@@ -1,5 +1,6 @@
 <?php
 ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
 require('application/controllers/controller.controller.php');
 require('application/frontcontroller.class.php');
@@ -22,6 +23,12 @@ function __autoload($file) {
 /**
 @ TODO
 	Page views
-	MODELS 
+	MODELS
+	ROUTER Functions 
+READ
+:http://johnsquibb.com/tutorials/mvc-framework-in-1-hour-part-one
+:https://github.com/robap/php-router/blob/master/lib/Router.php
 **/
+
+echo '<pre>';
 new FrontController();

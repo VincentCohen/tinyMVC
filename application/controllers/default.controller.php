@@ -9,12 +9,13 @@ class DefaultController extends Controller{
 	}
 	
 	function index()
-	{
-		$data = array();
-		$data["title"] = $this->model->indexTest();
-		$data["content"] = " kontjes " ;
+	{	
+		$title = $this->model->getIndexTitle();
+		$content = " kontjes " ;	
 		
-		return $this->render("index.view",$data);
+		$this->assign('title', $title);
+		$this->assign('content', $content);
+		$this->setView('index');
 	}
 	
 	function about_us(){

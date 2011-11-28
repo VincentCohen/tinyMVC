@@ -1,10 +1,12 @@
 <?php 
 class FrontController 
 { 
-    public function __construct () 
-    { 
+	
+    public function __construct (){ 
+    
         if (isset($_SERVER['PATH_INFO'])){ 
             $parts = explode ('/',strtolower(trim($_SERVER['PATH_INFO'], '/' ))); 
+            
             /** 
              * $parts is nu dan dus array ( [0] => 'guestbook', [1] => 'showlist' ); 
              */ 
@@ -15,15 +17,41 @@ class FrontController
             $controller = 'default'; 
             $action = 'index'; 
         }
+         
+         
+        /*
+        	If router returns false dispatch controller/action
+        		else,see router
+        */
+        if(!$this->router($_SERVER['PATH_INFO'])){
+        	$this->dispatch($controller, $action);    
+        }  	
         
-        $this->dispatch($controller, $action); 
+    }
+    
+    /*
+    	Router
+    		Check if current url call refers to a different controller class and method.
+    */
+    public function router($path){
+    	
+    	//allowed routes
+    	$routes = array ( 
+    		/*'/news/items/(id)' => array ( 'controller' => 'news', 'action' => 'items' ), 
+    		'/products/item/(id)' => array ( 'controller' => 'news', 'action' => 'items' ),    */	
+    		'/news/<action>/<id>' => array ( 'controller' => 'news', 'action' => 'items' ),
+    		'a' => array ( 'controller' => 'news', 'action' => 'items' )
+    	);
+    	
+   		$array = preg_match('^\/.*^', '/news/items',$matches);
+		var_dump($matches);
+    	
+    	return false;
     }    
     
     /**
-    *	@ PARAMS, controller / action
-    *		Search for requested controller,
-    			search for matching controller
-    				execute controller
+    *	Dispatch
+    		does things.. include controller class & execute requested action
     **/
     public function dispatch ($controller, $action){
 		
@@ -34,16 +62,20 @@ class FrontController
             
             if (class_exists($controllername)) { // bestaat de class
                 if (in_array($action, get_class_methods ($controllername))){ 
-                    /** Actie bestaat ook, dus uitvoeren. */ 
+
+                    /** Action(method) exists, call it. */ 
                     $objController = new $controllername(); 
                     $objController->$action(); 
+                    
+                    //succesfully called, return
                     return; 
                 } 
             } 
         }  
          
-        // hmmm.. geen return dus er is iets mis
-        die ($this->throw404($controller,$action)); 
+        //only thrown when there is no return @LINE:63.
+        #Should be error handler..
+        $this->throw404($controller,$action); 
     }
     
     public function throw404($controller,$action){
