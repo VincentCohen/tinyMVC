@@ -29,24 +29,31 @@ class FrontController
         
     }
     
-    /*
+    /**
     *	Router
-    *	Check if current url call refers to a different controller class and method.
+    *	By default the url news/items will load the controller news and method items
+    *	When the routemap is set and default routing(thus news controller and method items) comes with no results 
+    	the router is called. It takes the parts of the url and finds the apropriate controller & methods 
+    *
     */
-    public function router($currentUrl)
+    public function router($requestUrl)
     {
     	$routeMap 	  = $this->routes;
-    	$currentRoute = '';
-    	$parts = explode ('/',strtolower(trim($currentUrl, '/' ))); 
+    	$currentRoute = '';	
 		
-		//check if current request ahs a different route
-		if(array_key_exists($currentUrl,$routeMap)){
-			$currentRoute = $routeMap[$currentUrl];
+		//Check if current route exists in array key
+		if(array_key_exists($requestUrl,$routeMap)){
+			$currentRoute = $routeMap[$requestUrl];
+			echo '1' ;
 		}else{
-			//loop trough routes map
-				//include current controller and call current action
+			echo '2' ;
+			//nope it does not.. 
+			$requestParts = explode ('/',strtolower(trim($requestUrl, '/' ))); 
+			$mapKey		  = '/'.$requestParts[0].'/<action>/<id>';
 			
-			//else execute dispatch using controller/action see LINE:#27
+			if(array_key_exists($mapKey,$routeMap)){
+				$currentRoute = $routeMap[$mapKey];
+			}
 		}
 		
 		var_dump($currentRoute);
